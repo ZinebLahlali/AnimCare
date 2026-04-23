@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\RendezVous;
 use App\Models\Animal;
+use App\Models\User;
 use App\Http\Requests\StoreRendezVousRequest;
 use App\Http\Requests\UpdateRendezVousRequest;
+use App\Http\Requests\UpdateRendezVousStatusRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\RendezVousNotification;
+use Illuminate\Support\Facades\Notification;
 
 
 class RendezVousController extends Controller
@@ -18,53 +21,100 @@ class RendezVousController extends Controller
      */
     public function index()
     {    
-        $rendezVous = DB::table('rendez_vous')
+        $appointments = DB::table('rendez_vous')
         ->join('animals', 'rendez_vous.animal_id', '=', 'animals.id')
         ->join('users', 'users.id', '=', 'animals.user_id')
-        ->select('animals.name', 'rendez_vous.date', 'rendez_vous.heure', 'rendez_vous.statut', 'users.id')
+        ->select(
+            'rendez_vous.date',
+            'rendez_vous.heure',
+            'rendez_vous.statut',
+            'rendez_vous.motif',
+            'animals.photo as animal_photo',
+            'animals.name as animal_name',
+            'users.id as user_id',
+            'users.name as user_name' 
+           )
         ->where('users.id', '=', Auth::user()->id)
         ->get();
 
-        return response()->json([
-             'rendezVous' => $rendezVous,
-        ]);
-
-        // return view('rendezVous.index', compact('rendezVous'));
+        return view('owner.pets.appointment', compact('appointments'));
+        
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+   public function create($id)
     {
-        return view('rendezvous.create');
-    }
+     $animal = Animal::findOrFail($id);
+
+     return view('owner.pets.test', compact('animal'));
+}
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreRendezVousRequest $request)
-    {    $animal = Animal::where('id', $request->animal_id)
-               ->where('user_id', Auth::user()->id)
+    {   $user = Auth::user(); 
+        $animal = Animal::where('id', $request->animal_id)
+               ->where('user_id', $user->id)
                ->firstOrFail();
+        $exists = RendezVous::where('date', $request->date)
+                   ->where('heure', $request->heure)
+                   ->exists();
+                   
+        if ($exists) {
+            return back()->withErrors([
+            'heure' => 'This time is already reserved.'
+        ])->withInput();
+    }      
         $rendezvous = RendezVous::create([
             'date' => $request->date,
             'heure' => $request->heure,
-            'notif' => $request->notif,
+            'motif' => $request->motif,
+            'user_id' => $user->id,
             'statut' => 'pending', 
             'animal_id' => $animal->id
         ]);
 
-        return response()->json([
-            'rendezvous' => $rendezvous
-        ]);
+        $vet = User::where('role', 'Vet')->firstOrFail();
+        $content = "Le client {$user->name} souhaite un rendez-vous pour son animal {$animal->name}.";
+        Notification::send($vet, new RendezVousNotification($user->name, $content, $rendezvous->id));
 
-        // return redirect('/rendezvous')->with('success', 'Appointment added successfully.');
+        return redirect()->route('pets.appointment');
     }
 
     /**
      * Display the specified resource.
      */
+
+    public function accept(UpdateRendezVousStatusRequest $request)
+    {
+      
+        $rdv = RendezVous::findOrFail($request->id);
+        $rdv->update([
+            'statut' => 'confirmed'
+        ]);
+
+        return back();
+    }
+
+    public function cancel(UpdateRendezVousStatusRequest $request)
+    {
+        $rdv = RendezVous::findOrFail($request->id);
+        $rdv->update([
+            'statut' => 'cancel'
+        ]);
+        return back();
+    }
+
+
+
+
+
+
+
+
     public function show(RendezVous $rendezVous)
     {
         //
@@ -93,7 +143,7 @@ class RendezVousController extends Controller
             'motif' => $request->motif
         ]); 
         
-        return redirect('/dashboard')->with('success', 'Appointment updated successfully');
+        return redirect('/pets/appointment')->with('success', 'Appointment updated successfully');
     }
 
     /**
@@ -107,7 +157,7 @@ class RendezVousController extends Controller
              'statut' => 'cancelled'
         ]);
         
-        return redirect('/dashboard')->with('success', 'Appointment cancelled successfully');
+        return redirect('/pets/appointment')->with('success', 'Appointment cancelled successfully');
 
     }
 }
