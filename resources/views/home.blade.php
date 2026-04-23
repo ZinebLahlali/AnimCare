@@ -20,11 +20,6 @@
                         <a href="#">Reviews</a>
                         <a href="#">Contact</a>
                 </div>
-                <div>
-                    <a href="#" class="bg-purple-500 text-white px-6 py-3 rounded-full text-sm font-semiblod">
-                        Request An Appointment
-                    </a>
-                </div>
             </div>
 
         </div>
