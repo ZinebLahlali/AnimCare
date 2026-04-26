@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RendezVous extends Model
 {
     /** @use HasFactory<\Database\Factories\RendezVousFactory> */
     use HasFactory;
+    protected $table = 'rendez_vous';
     protected $fillable = [
        'date',
        'heure',
@@ -17,4 +19,9 @@ class RendezVous extends Model
        'user_id',
        'animal_id',
     ];
+
+    public function animal(): BelongsTo
+    {
+        return $this->belongsTo(Animal::class);
+    }
 }

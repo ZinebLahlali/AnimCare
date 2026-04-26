@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\RendezVousNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Http\Request;
 
 
 class RendezVousController extends Controller
@@ -24,7 +25,9 @@ class RendezVousController extends Controller
         $appointments = DB::table('rendez_vous')
         ->join('animals', 'rendez_vous.animal_id', '=', 'animals.id')
         ->join('users', 'users.id', '=', 'animals.user_id')
+        ->where('rendez_vous.statut', '!=', 'cancel')
         ->select(
+            'rendez_vous.id as id',
             'rendez_vous.date',
             'rendez_vous.heure',
             'rendez_vous.statut',
@@ -48,7 +51,7 @@ class RendezVousController extends Controller
     {
      $animal = Animal::findOrFail($id);
 
-     return view('owner.pets.test', compact('animal'));
+     return view('owner.pets.addAppointment', compact('animal'));
 }
 
     /**
@@ -56,6 +59,20 @@ class RendezVousController extends Controller
      */
     public function store(StoreRendezVousRequest $request)
     {   $user = Auth::user(); 
+        
+       if($request->type === 'urgence'){
+        return back()->with('error', 'For emergencies, please call the veterinarian directly.')
+                     ->withInput();
+       }
+
+       $date = \Carbon\Carbon::parse($request->date);
+
+       if($date->isWeekend()){
+        return back()->with('error', 'Appointments are not available on weekends except emergencies.')
+                     ->withInput();
+       }
+
+         
         $animal = Animal::where('id', $request->animal_id)
                ->where('user_id', $user->id)
                ->firstOrFail();
@@ -74,7 +91,8 @@ class RendezVousController extends Controller
             'motif' => $request->motif,
             'user_id' => $user->id,
             'statut' => 'pending', 
-            'animal_id' => $animal->id
+            'animal_id' => $animal->id,
+            'type' => $request->type
         ]);
 
         $vet = User::where('role', 'Vet')->firstOrFail();
@@ -88,24 +106,33 @@ class RendezVousController extends Controller
      * Display the specified resource.
      */
 
+    
     public function accept(UpdateRendezVousStatusRequest $request)
     {
-      
-        $rdv = RendezVous::findOrFail($request->id);
-        $rdv->update([
+        $appoint = RendezVous::findOrFail($request->id);
+        $appoint->update([
             'statut' => 'confirmed'
         ]);
 
         return back();
     }
 
-    public function cancel(UpdateRendezVousStatusRequest $request)
+    public function cancel($id)
     {
-        $rdv = RendezVous::findOrFail($request->id);
-        $rdv->update([
+        $appoint = RendezVous::findOrFail($id);
+
+        if($appoint->statut === "confirmed" || $appoint->statut === "completed"){
+           
+          return back()->with('error', 'You can not cancel this appointment');
+
+        } else{
+              $appoint->update([
             'statut' => 'cancel'
         ]);
-        return back();
+
+        }
+      
+        return back()->with('success', 'Appointment cancelled');
     }
 
 
@@ -125,39 +152,52 @@ class RendezVousController extends Controller
      */
     public function edit($id)
     {
-        $rendezvous = RendezVous::FindOrFail($id);
+        $appointments = RendezVous::FindOrFail($id);
 
-        return view('rendezvous.edit', compact('rendezvous'));
+        return view('owner.update_appointment', compact('appointments'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRendezVousRequest $request, $id)
-    {   $rendezvous = RendezVous::where('user_id', Auth::user()->id)
+    public function updateAppointment(Request $request, $id)
+    { 
+        $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+            'heure' => 'required|date_format:H:i',
+            'motif' => 'required|string|min:5|max:255',
+        ]);
+        $appointments = RendezVous::where('user_id', Auth::user()->id)
                       ->where('id', $id)
                       ->firstOrFail();
-        $rendezvous->update([
-            'date' => $request->date,
-            'heure' => $request->heure,
-            'motif' => $request->motif
-        ]); 
+                    //   dd($request->all());
+
+        if($appointments->statut !== 'pending'){
+            
+            return back()->with('error', 'You can not update this appointment');
+
+        }else {
+            $appointments->date = $request->date;
+            $appointments->heure = $request->heure;
+            $appointments->motif = $request->motif;
+            $appointments->save();
+        }             
         
-        return redirect('/pets/appointment')->with('success', 'Appointment updated successfully');
+        return redirect()->route('pets.appointment')->with('success', 'Appointment updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
-    { $rendezvous = RendezVous::where('user_id', Auth::user()->id)
+    { $appointments = RendezVous::where('user_id', Auth::user()->id)
                     ->where('id', $id)
                     ->firstOrFail();
-        $rendezvous->update([
+        $appointments->update([
              'statut' => 'cancelled'
         ]);
         
-        return redirect('/pets/appointment')->with('success', 'Appointment cancelled successfully');
+        return back()->with('success', 'Appointment cancelled successfully');
 
     }
 }

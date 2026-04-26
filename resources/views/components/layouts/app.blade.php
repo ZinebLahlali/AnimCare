@@ -35,7 +35,7 @@
                             <span class="text-sm  text-white  font-bold">Appointments</span>
                             </a>
 
-                            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                            <a href="/profile" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-100">
                                 <span class="text-sm  text-white  font-bold">Profile</span> 
                             </a>
                         </div> 
@@ -58,7 +58,7 @@
                             <span class="text-sm text-white font-bold">Appointments</span>
                             </a>
 
-                            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500 ">
+                            <a href="/profile" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500 ">
                                 <span class="text-sm text-white font-bold">Profile</span> 
                             </a>
 
@@ -90,7 +90,7 @@
                             <span class="text-sm text-white font-bold">Statistics</span>
                             </a>
 
-                            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                            <a href="/profile" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-100">
                                 <span class="text-sm text-white  font-bold">Profile</span> 
                             </a>
 

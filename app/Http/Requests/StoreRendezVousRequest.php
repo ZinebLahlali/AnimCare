@@ -26,8 +26,8 @@ class StoreRendezVousRequest extends FormRequest
             'date' => 'required|date|after_or_equal:today',
             'heure' => 'required|date_format:H:i',
             'motif' => 'required|string|min:5|max:255',
-            'statut' => 'required|in:pending,confirmed,cancel',
-             'animal_id' => 'required|exists:animals,id'
+            'animal_id' => 'required|exists:animals,id',
+            'type' => 'required|in:normal,urgence'
         ];
     }
 }

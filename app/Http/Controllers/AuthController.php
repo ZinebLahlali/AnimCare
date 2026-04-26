@@ -13,7 +13,7 @@ class AuthController extends Controller
 {
     public function showRegisterForm()
     {
-      //   return view('auth.register');
+      return view('auth.register');
     }
 
    public function register(StoreAuthRequest $request)
@@ -37,16 +37,15 @@ class AuthController extends Controller
             ]);
 
    }
-  
-    return response()->json(['user' => $user], 201);
+   Auth::login($user);
      
-    //  return redirect('/dashboard/owner')->with('success', 'Registration successful! Please log in.');
+     return redirect()->route('owner.dashboard');
    } 
 
 
    public function showLoginForm()
    {
-      // return view('auth.login');
+      return view('auth.login');
    }
 
   public function login(Request $request)
@@ -54,18 +53,15 @@ class AuthController extends Controller
      $credentials = $request->only('email', 'password');
 
      if(Auth::attempt($credentials)){
-      //   return redirect()->intended('/');
-      return response()->json([
-         $credentials,
-      ]);
+      return redirect()->route(strtolower(Auth::user()->role).".dashboard");
      }
-   // return redirect('/login')->with('error', 'invalid credentials. Please try again.');
+   return redirect('/login')->with('error', 'invalid credentials. Please try again.');
 
   }
  
-  public function logout(StoreAuthRequest $request)
+  public function logout()
   {  auth::logout();
-     return redirect('/login');
+      return redirect()->route('login');
 
   }
 

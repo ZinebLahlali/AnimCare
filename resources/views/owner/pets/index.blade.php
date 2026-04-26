@@ -40,7 +40,7 @@
             </div>
             <div class="flex gap-4">
               <button class="px-3 py-2 w-full rounded-lg bg-blue-50 text-purple-500 text-xs font-bold">Health Records</button>
-              <a href="{{route('pets.test', $animal->id)}}" class="px-3 py-2 w-full rounded-lg bg-blue-50 text-purple-500 text-xs font-bold">Book Appointment</a>
+              <a href="{{route('pets.addAppointment', $animal->id)}}" class="px-3 py-2 w-full rounded-lg bg-blue-50 text-purple-500 text-xs font-bold">Book Appointment</a>
             </div>
             <div class="flex gap-6">
                  <a href="{{route('pets.edit', $animal->id)}}" class="flex-1 py-2.5 rounded-lg border border-gray-200 text-white bg-yellow-300 text-xs text-center font-bold">Edit Profile</a>

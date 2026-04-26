@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\StoreAnimalRequest;
 use App\Http\Requests\UpdateAnimalRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AnimalController extends Controller
 {
@@ -17,10 +18,18 @@ class AnimalController extends Controller
     {
         $animals = Animal::where('user_id', Auth::user()->id)->get();
 
-        return response()->json([
-            'animals' => $animals,
-        ]);
-        // return view('animals.index', ['animals' => $animals]);
+         return view('owner.dashboard', ['animals' => $animals]);
+
+          // return response()->json([
+        //     'animals' => $animals,
+        // ]);
+    }
+
+    
+    public function showPetsCard()
+    {
+        $animaux = Animal::where('user_id', Auth::user()->id)->get();
+        return view('owner.pets.index', compact('animaux'));
     }
 
     /**
@@ -28,7 +37,7 @@ class AnimalController extends Controller
      */
     public function create()
     {
-        return view('animals.create');
+        return view('owner.pets.create');
     }
 
     /**
@@ -36,7 +45,12 @@ class AnimalController extends Controller
      */
     public function store(StoreAnimalRequest $request)
     {    $user_id = Auth::user()->id;
-        $path = $request->file('image')->store('images', 'public');
+         $path = null;
+
+        if($request->hasFile('image')){
+            $path = $request->file('image')->store('images', 'public');
+        }
+
         $animal = Animal::create([
             'name' => $request->name,
             'photo' => $path,
@@ -46,11 +60,11 @@ class AnimalController extends Controller
             'weight' => $request->weight,
             'user_id' => $user_id,
         ]);
-        return response()->json([
-            'animal' => $animal,
-        ]);
+        // return response()->json([
+        //     'animal' => $animal,
+        // ]);
 
-        //  return redirect('/animals')->with('success', 'Animal added successfully.');
+        return redirect()->route('pets.index');
 
     }
 
@@ -69,11 +83,11 @@ class AnimalController extends Controller
     {    
         $animal = Animal::findOrFail($id);
 
-        return response()->json([
-            'animal' => $animal,
-        ]);
+        // return response()->json([
+        //     'animal' => $animal,
+        // ]);
        
-        return view('animals.edit', compact('animal'));
+        return view('owner.pets.edit', compact('animal'));
     }
 
     // public function edit(Animal $animal)
@@ -88,6 +102,15 @@ class AnimalController extends Controller
     {  $animal = Animal::where('user_id', Auth::user()->id)
                      ->where('id', $id)
                      ->firstOrFail();
+             
+             if ($request->hasFile('image')) {
+                if ($animal->photo) {
+                    Storage::disk('public')->delete($animal->photo);
+                }
+
+                $path = $request->file('image')->store('images', 'public');
+                $animal->photo = $path;
+             }        
 
            $animal->update([
                 'name' => $request->name,
@@ -97,11 +120,11 @@ class AnimalController extends Controller
                 'weight' => $request->weight,
            ]);
            
-        return response()->json([
-            'animal' => $animal,
-        ]);
+        // return response()->json([
+        //     'animal' => $animal,
+        // ]);
         
-        //  return redirect('/dashboard');
+        return redirect()->route('pets.index');
         
     }
 
@@ -115,11 +138,11 @@ class AnimalController extends Controller
 
         $animal->delete();
 
-        return response()->json([
-            'message' => 'the animal is deleted'
-        ]);
+        // return response()->json([
+        //     'message' => 'the animal is deleted'
+        // ]);
 
-        // return redirect('/dashboard');
+        return redirect()->route('pets.index');
         
     }
 }

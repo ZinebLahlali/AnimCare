@@ -8,48 +8,61 @@
                     <h2 class="text-3xl font-black">Manage Appointments</h2>
                     <p class="text-sm text-gray-400 mt-1">Keep track of your pet's healthcare schedule.</p>
                 </div>
-                <button class="flex items-center gap-2 bg-purple-500 text-white font-bold py-3 px-6 rounded-xl">Book New Appointment</button>
             </div>
 
 
-            <div>
+            <div class="p-6">
+                @if(session('error'))
+                <div class="bg-red-100 text-red-600 p-3 rounded-lg mb-4">
+                    {{session('error')}}
+                </div>
+                @endif
 
+                @if(session('success'))
+                <div class="bg-red-100 text-red-600 p-3 rounded-lg mb-4">
+                    {{session('success')}}
+                </div>
+                @endif
+
+                
                 <div class="grid grid-cols-2 gap-6">
-
+                    @foreach($appointments as $appointment)
                     <div class="bg-white rounded-xl border border-gray-200 p-5 flex flex-col gap-4">
+                        
                         <div class="flex items-start gap-4">
-                            <img
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpRn5nyVtziudUtwZwbGXQmzr_vmaHdhUtDZZNB5Z8izW-CB6fklABDb1E9Sm4KYCLZCphm0beJG2-Rt4lcZ2AlbeE_aSvs-0ZuiUa_wnvWBiXBG38gjHVxoF6WLR7XtgcPGC7omDsZtFBzR7piIhvxG_9lrO8_LjGOjvg7BqepClg-XGQwXe0Wq8_n-6Df9-f8dKxsU17_NnruTnQ_IXAys7uj2PVjOclglBXfgXYsB_hz9bqqwxRwAphdKWoSzDkGnsnfmdqJS5p"
-                                alt="Buddy"
-                                class="w-16 h-16 rounded-lg object-cover" />
+
+                            <img src="{{asset('storage/'. $appointment->animal_photo)}}" class="w-16 h-16 rounded-lg object-cover" />
+                           
                             <div class="flex-1">
-                                <p class="text-xs font-bold text-green-500 uppercase mb-1">Confirmed</p>
-                                <p class="text-lg font-black">Buddy • Annual Checkup</p>
+                                <p class="text-xs font-bold text-green-500 uppercase mb-1">{{$appointment->statut}}</p>
+                                <p class="text-xs font-black">Motif: {{$appointment->motif}}</p>
+
                                 <div class="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                                    <span class="material-symbols-outlined text-sm">person</span>
-                                    <span>Dr. Sarah Smith</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                                    <span class="material-symbols-outlined text-sm">schedule</span>
-                                    <span>10:00 AM (45 min)</span>
+                                    <p>{{$appointment->heure}}</p>
                                 </div>
                             </div>
-                            <div class="bg-purple-500 text-white text-center px-3 py-2 rounded-lg min-w-12">
-                                <p class="text-xs font-bold uppercase">Oct</p>
-                                <p class="text-2xl font-black leading-none">24</p>
+                            <div class="bg-blue-500 text-white text-center px-3 py-2 rounded-lg min-w-12">
+                                <p class="text-xs font-bold uppercase">{{$appointment->date}}</p>
                             </div>
                         </div>
                         <div class="flex gap-3 border-t border-gray-100 pt-4">
-                            <button class="flex-1 flex items-center justify-center gap-2 py-2 border border-gray-200 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-50">
-                                <span class="material-symbols-outlined text-sm">calendar_today</span>
-                                Reschedule
+                            
+                            <a href="{{route('update_appointment' , $appointment->id)}}"
+                                 class="flex-1 flex items-center justify-center gap-2 py-2  rounded-lg text-sm font-semibold text-blue-600 hover:bg-blue-100">
+                                Edit
+                            </a>
+
+                          <form  method="POST"  action="{{route('cancel.appointment', $appointment->id)}}" class="flex-1">
+                            @csrf
+                            @method('PUT')
+                            <button  type="submit" onclick="return confirm('Are you sure you want to cancel this appointment?')"
+                            class=" w-full flex items-center justify-center gap-2 py-2  rounded-lg text-sm font-semibold text-red-600 hover:bg-red-100">
+                               Cancel
                             </button>
-                            <button class="flex-1 flex items-center justify-center gap-2 py-2 border border-red-200 rounded-lg text-sm font-semibold text-red-500 hover:bg-red-50">
-                               
-                                Cancel
-                            </button>
+                          </form>
                         </div>
                     </div>
+                    @endforeach
 
                 </div>
             </div>
