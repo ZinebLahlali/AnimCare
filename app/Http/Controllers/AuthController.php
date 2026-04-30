@@ -53,16 +53,35 @@ class AuthController extends Controller
      $credentials = $request->only('email', 'password');
 
      if(Auth::attempt($credentials)){
+        $user = Auth::user();
+        if($user->statut === 1){
+
+           Auth::logout();
+            return redirect('/home')->with('error', 'Your Account is banned');
+        }
+
       return redirect()->route(strtolower(Auth::user()->role).".dashboard");
      }
    return redirect('/login')->with('error', 'invalid credentials. Please try again.');
 
   }
+
+
+
+
+
  
   public function logout()
   {  auth::logout();
       return redirect()->route('login');
 
+  }
+
+
+  public function getVet()
+  {
+    $vet = User::where('role', 'Vet')->first();
+    return view('about', compact('vet'));
   }
 
 
