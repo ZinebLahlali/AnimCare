@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Pet</title>
-   <script src="https://cdn.tailwindcss.com/?plugins=forms,container-queries"></script>
-</head>
 
-<body class="bg-gray-100 min-h-screen">
+   <x-layouts.app>
+
     <div class="max-w-xl mx-auto px-6 py-10">
-        <h1 class="text-3xl font-bold text-purple-600 mb-6">
+        <h1 class="text-3xl font-bold text-blue-600 mb-6">
           Add New Pet
         </h1>
+         
+
         <form method="POST" action="{{route('pets.store')}}" enctype="multipart/form-data">
            @csrf
            <input type="text" name="name" placeholder="Pet Name" class="w-full border rounded-lg p-2 mb-4">
@@ -24,17 +20,12 @@
            <input type="text" name="weight" placeholder="Weight" class="w-full border rounded-lg p-2 mb-4">
            <input type="file" name="image" id="image"  class="w-full border p-2 mb-4 rounded">
 
-           <button class="bg-purple-500 text-white px-4 py-2 rounded">
+           <button class="bg-blue-500 text-white px-4 py-2 rounded">
                Save Pet
            </button>
-
-
-
-
 
         </form>
 
     </div>
+    </x-layouts.app>
 
-</body>
-</html>

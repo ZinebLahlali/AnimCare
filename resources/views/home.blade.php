@@ -6,28 +6,28 @@
     <script src="https://cdn.tailwindcss.com/?plugins=forms,container-queries"></script>
   </head>
 <body class="bg-white">
- <div class="w-full bg-purple-500 text-white text-sm">
+ <div class="w-full bg-blue-600 text-white text-sm">
   <div class="w-full bg-white">
             <div class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-purple-700">AnimCare</h1>
-                    <p class="text-sm text-purple-500">animal hospital</p>
+                    <h1 class="text-3xl font-bold text-blue-700">AnimCare</h1>
+                    <p class="text-sm text-blue-500">animal hospital</p>
                 </div>
-                <div class="hidden md:flex items-center gap-8 text-sm font-medium text-purple-700">
-                        <a href="#">Home</a>
-                        <a href="#">Services</a>
-                        <a href="#">Resources</a>
-                        <a href="#">Reviews</a>
-                        <a href="#">Contact</a>
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium text-blue-600">
+                        <a href="{{'home'}}">Home</a>
+                        <a href="{{'about'}}">About Our Veterinary</a>
+                        <a href="{{'login'}}">Login</a>
+                        <a href="{{'register'}}">Register</a>
+                       
                 </div>
             </div>
 
         </div>
-        <section class="w-full bg-purple-50 mb-8">
+        <section class="w-full bg-blue-50 mb-8">
             <div class="max-w-7xl  px-6 py-16 grid md:grid-cols-2 items-center gap-10">
                 <div>
                    <h2 class="text-5xl font-bold text-black">Gentle care,
-                    <span class="text-purple-600">advanced treatment.</span></h2>
+                    <span class="text-blue-600">advanced treatment.</span></h2>
 
                     <p class="mt-6 text-gray-700 text-lg">AnimCare offers professional veterinary services focused on keeping your pets healthy,
                         safe, and happy every day.</p>
@@ -86,3 +86,4 @@
 
 
 </body>
+</html>

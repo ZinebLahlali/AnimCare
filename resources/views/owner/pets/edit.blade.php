@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Pet</title>
-   <script src="https://cdn.tailwindcss.com/?plugins=forms,container-queries"></script>
-</head>
-
-<body class="bg-gray-100 min-h-screen">
+<x-layouts.app>
     <div class="max-w-xl mx-auto px-6 py-10">
 
         <form method="POST" action="{{route('pets.update', $animal->id)}}" enctype="multipart/form-data">
@@ -32,6 +24,5 @@
         </form>
 
     </div>
+</x-layouts.app>
 
-</body>
-</html>
