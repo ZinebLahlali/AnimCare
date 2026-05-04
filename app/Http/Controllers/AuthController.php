@@ -16,8 +16,11 @@ class AuthController extends Controller
       return view('auth.register');
     }
 
+
+  //Register
    public function register(StoreAuthRequest $request)
    {  $authuser = auth::user();
+
     if($authuser && $authuser->role == 'Admin'){
 
       $user = User::create([
@@ -28,7 +31,10 @@ class AuthController extends Controller
         'specialite' => $request->specialite,
         'fix' => $request->fix,
       ]);
-   } else{
+
+      return redirect()->route('admin.dashboard');
+
+   } 
             $user = User::create([
                'name' => $request->name,
                'email' => $request->email,
@@ -36,11 +42,12 @@ class AuthController extends Controller
                'phoneNum' => $request->phoneNum,
             ]);
 
-   }
-   Auth::login($user);
+   
+    //  Auth::login($user);
      
      return redirect()->route('owner.dashboard');
    } 
+
 
 
    public function showLoginForm()
@@ -48,13 +55,16 @@ class AuthController extends Controller
       return view('auth.login');
    }
 
+
+
+  // Login 
   public function login(Request $request)
   {
      $credentials = $request->only('email', 'password');
 
      if(Auth::attempt($credentials)){
         $user = Auth::user();
-        if($user->statut === 1){
+        if($user->isBanned === 1){
 
            Auth::logout();
             return redirect('/home')->with('error', 'Your Account is banned');
@@ -70,7 +80,7 @@ class AuthController extends Controller
 
 
 
- 
+  // Logout
   public function logout()
   {  auth::logout();
       return redirect()->route('login');

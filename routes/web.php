@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
@@ -15,6 +16,8 @@ Route::redirect('/', '/home');
 Route::get('/home', function(){
     return view('home');
 });
+
+Route::get('/about', [AuthController::class, 'getVet']);
 
 // Route::get('/owner/dashboard', function (){
 //     return view('owner.dashboard');
@@ -79,9 +82,10 @@ Route::put('profile/update', [ProfileController::class, 'updateProfile'])->name(
 // route Admin
 Route::prefix('admin')->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-
+    Route::get('/dashboard', [AdminController::class, 'total'])->name('admin.dashboard');
+    Route::put('/user/ban/{id}', [AdminController::class, 'toggelBan'])->name('user.ban');
+    Route::get('/users', [AdminController::class, 'getAllUsers'])->name('admin.users');
+    Route::post('/singin', [AuthController::class, 'register'])->name('admin.singin');
+    Route::get('/singin', [AdminController::class, 'singinForm']);
 });
 

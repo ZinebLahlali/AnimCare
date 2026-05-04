@@ -77,31 +77,28 @@
                 <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
                     <div class="grid grid-cols-4 px-3 py-2 border-b border-gray-100 bg-gray-50">
                         <p class="text-xs font-bold text-gray-400 uppercase">Pet</p>
-                        <p class="text-xs font-bold text-gray-400 uppercase">Doctor & Service</p>
+                        <p class="text-xs font-bold text-gray-400 uppercase">Doctor</p>
                         <p class="text-xs font-bold text-gray-400 uppercase">Date & Time</p>
                         <p class="text-xs font-bold text-gray-400 uppercase">Status</p>
                     </div>
 
                     <div class="grid grid-cols-4 px-3 py-2 border-b border-gray-100 items-center">
-
+                        @foreach($rendezVous as $rendez)
                         <div class="flex items-center gap-3">
-                            <img
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpRn5nyVtziudUtwZwbGXQmzr_vmaHdhUtDZZNB5Z8izW-CB6fklABDb1E9Sm4KYCLZCphm0beJG2-Rt4lcZ2AlbeE_aSvs-0ZuiUa_wnvWBiXBG38gjHVxoF6WLR7XtgcPGC7omDsZtFBzR7piIhvxG_9lrO8_LjGOjvg7BqepClg-XGQwXe0Wq8_n-6Df9-f8dKxsU17_NnruTnQ_IXAys7uj2PVjOclglBXfgXYsB_hz9bqqwxRwAphdKWoSzDkGnsnfmdqJS5p"
-                                alt="Buddy"
-                                class="w-8 h-8 rounded-full object-cover" />
-                            <span class="text-sm font-semibold">Buddy</span>
+                            <img src="{{asset('storage/'. $rendez->animal_photo)}}" alt="" class="w-8 h-8 rounded-full object-cover" />
+                            <span class="text-sm font-semibold">{{$rendez->animal_name}}</span>
                         </div>
                         <div>
-                            <p class="text-sm font-semibold">Grooming Session</p>
-                            <p class="text-xs text-gray-400">Specialist: Anna Lee</p>
+                            <p class="text-xs text-gray-400">Specialist:{{$rendez->vet->name}}</p>
                         </div>
                         <div>
-                            <p class="text-sm font-semibold">Sep 12, 2023</p>
-                            <p class="text-xs text-gray-400">03:00 PM</p>
+                            <p class="text-sm font-semibold">{{$rendez->date}}</p>
+                            <p class="text-xs text-gray-400">{{$rendez->heure}}</p>
                         </div>
                         <div>
-                            <span class="bg-green-100 text-green-600 text-xs font-bold px-3 py-1 rounded-full">Completed</span>
+                            <span class="bg-green-100 text-green-600 text-xs font-bold px-3 py-1 rounded-full">{{$rendez->statut}}</span>
                         </div>
+                        @endforeach
                     </div>
 
                 </div>

@@ -18,10 +18,18 @@ class RendezVous extends Model
        'statut',
        'user_id',
        'animal_id',
+       'vet_id'
     ];
 
     public function animal(): BelongsTo
     {
         return $this->belongsTo(Animal::class);
     }
+
+    public function vet()
+   {
+    return $this->belongsTo(User::class, 'vet_id');
+   }
+
+   
 }

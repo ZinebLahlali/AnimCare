@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Animal;
+use App\Models\RendezVous;
 use App\Models\User;
 use App\Http\Requests\StoreAnimalRequest;
 use App\Http\Requests\UpdateAnimalRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+
+use function Symfony\Component\Clock\now;
 
 class AnimalController extends Controller
 {
@@ -17,12 +21,15 @@ class AnimalController extends Controller
     public function index()
     {
         $animals = Animal::where('user_id', Auth::user()->id)->get();
+          $rendezvouses = RendezVous::where('user_id', Auth::user()->id)
+                  ->where('statut' ,'pending')
+                  ->where('date', '>=', Carbon::now()->toDateString())
+                  ->get();
+        $vet = User::where('role', 'Vet')->first();
 
-         return view('owner.dashboard', ['animals' => $animals]);
-
-          // return response()->json([
-        //     'animals' => $animals,
-        // ]);
+         return view('owner.dashboard', ['animals' => $animals, 'rendezvouses' => $rendezvouses, 'vet' => $vet]);
+        
+          
     }
 
     

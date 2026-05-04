@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Notifications\RendezVousNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 class RendezVousController extends Controller
@@ -40,9 +41,30 @@ class RendezVousController extends Controller
         ->where('users.id', '=', Auth::user()->id)
         ->get();
 
-        return view('owner.pets.appointment', compact('appointments'));
+
+        $rendezVous = DB::table('rendez_vous')
+          ->join('animals', 'rendez_vous.animal_id', '=', 'animals.id')
+          ->join('users', 'rendez_vous.user_id', '=', 'users.id')
+          ->where('rendez_vous.statut', '=', 'completed')
+          ->select(
+            'rendez_vous.date',
+            'rendez_vous.heure',
+            'rendez_vous.statut',
+            'animals.name as animal_name',
+            'animals.photo as animal_photo'
+          )
+          ->where('users.id', '=', Auth::user()->id)
+          ->get();
+                 
+
+        $vet = User::where('role', 'Vet')->first();
+
+        return view('owner.pets.appointment', compact('appointments', 'rendezVous', 'vet'));
         
     }
+
+  
+    
 
     /**
      * Show the form for creating a new resource.
@@ -52,7 +74,7 @@ class RendezVousController extends Controller
      $animal = Animal::findOrFail($id);
 
      return view('owner.pets.addAppointment', compact('animal'));
-}
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -80,11 +102,14 @@ class RendezVousController extends Controller
                    ->where('heure', $request->heure)
                    ->exists();
                    
-        if ($exists) {
+                   
+        if($exists) {
             return back()->withErrors([
             'heure' => 'This time is already reserved.'
         ])->withInput();
     }      
+        $vet = User::where('role' , 'Vet')->first();
+
         $rendezvous = RendezVous::create([
             'date' => $request->date,
             'heure' => $request->heure,
@@ -92,6 +117,7 @@ class RendezVousController extends Controller
             'user_id' => $user->id,
             'statut' => 'pending', 
             'animal_id' => $animal->id,
+            'vet_id' => $vet->id,
             'type' => $request->type
         ]);
 

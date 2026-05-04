@@ -12,43 +12,41 @@
 
             <!--Sidebar-->
             <div class="w-52 bg-blue-300 h-full flex flex-col border-r border-gray-200 p-4">
-
-                        <div class="flex items-center gap-3 px-2 mb-6">
-                            <img  src="" alt=""  class="w-12 h-12 rounded-full object-cover border-2 border-white"/>
-                        <div>
-                            <p class="text-base font-bold">{{Auth::user()->name}}</p>
+                      
+                        <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-blod text-lg">
+                            {{strtoupper(substr(Auth::user()->name, 0, 1))}}
                         </div>
-                        </div>
-
+                       
+                       
                         @if(Auth::user()->role === "Owner")
-                        <div class="flex flex-col gap-1 flex-1">
+                        <div class="flex flex-col mt-6 gap-1 flex-1">
 
-                            <a href="{{route('owner.dashboard')}}" class="flex items-center gap-3 px-3 py-3 rounded-lg text-gray-500 hover:bg-gray-100">
+                            <a href="{{route('owner.dashboard')}}" class="flex items-center gap-3 px-3 py-3 rounded-lg text-gray-500">
                             <span class="text-sm  text-white  font-bold">Dashboard</span>
                             </a>
 
-                            <a href="{{route('pets.index')}}" class="flex items-center gap-3 px-3 py-3 rounded-lg  text-purple-500">
+                            <a href="{{route('pets.index')}}" class="flex items-center gap-3 px-3 py-3 rounded-lg  text-blue-500">
                             <span class="text-sm  text-white font-bold">My Pets</span>
                             </a>
 
-                            <a href="{{route('pets.appointment')}}" class="flex items-center gap-3 px-3 py-3 rounded-lg text-gray-500 hover:bg-gray-100">
+                            <a href="{{route('pets.appointment')}}" class="flex items-center gap-3 px-3 py-3 rounded-lg text-gray-500">
                             <span class="text-sm  text-white  font-bold">Appointments</span>
                             </a>
 
-                            <a href="/profile" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                            <a href="/profile" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500">
                                 <span class="text-sm  text-white  font-bold">Profile</span> 
                             </a>
                         </div> 
                             <div class="mt-auto">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class=" px-3 py-2 rounded-lg bg-red-200 text-red-400">
+                                    <button type="submit" class=" px-3 py-2 rounded-lg bg-white text-red-400">
                                         Logout
                                     </button>
                                 </form>                            
                             </div>
                         @elseif(Auth::user()->role === "Vet")
-                         <div class="flex flex-col items-center gap-1 flex-1">
+                         <div class="flex flex-col mt-10 gap-1 flex-1">
 
                             <a href="{{route('vet.dashboard')}}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500">
                             <span class="text-sm text-white font-bold">Dashboard</span>
@@ -66,31 +64,27 @@
                          <div class="mt-auto">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class=" px-3 py-2 rounded-lg bg-red-200 text-red-400">
+                                    <button type="submit" class=" px-3 py-2 rounded-lg bg-white text-red-400">
                                         Logout
                                     </button>
                                 </form>                            
                             </div>
                         @else
-                         <div class="flex flex-col gap-1 flex-1">
+                         <div class="flex flex-col gap-1 flex-1 mt-10">
 
-                            <a href="{{route('admin.dashboard')}}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:bg-gray-100">
+                            <a href="{{route('admin.dashboard')}}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500">
                             <span class="text-sm text-white  font-bold">Dashboard</span>
                             </a>
 
-                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-50 text-purple-500">
+                            <a href="{{route('admin.users')}}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-blue-500">
                             <span class="text-sm  text-white  font-bold">Users List</span>
                             </a>
 
-                             <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-50 text-purple-500">
-                            <span class="text-sm  text-white  font-bold">veterinary</span>
-                            </a>
-
-                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500 hover:bg-gray-100">
+                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-500">
                             <span class="text-sm text-white font-bold">Statistics</span>
                             </a>
 
-                            <a href="/profile" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-100">
+                            <a href="/profile" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-500">
                                 <span class="text-sm text-white  font-bold">Profile</span> 
                             </a>
 
@@ -98,7 +92,7 @@
                          <div class="mt-auto">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="px-1 py-2 rounded-lg bg-red-100 text-red-400">
+                                    <button type="submit" class="px-1 py-2 rounded-lg bg-white text-red-400">
                                         Logout
                                     </button>
                                 </form>                            

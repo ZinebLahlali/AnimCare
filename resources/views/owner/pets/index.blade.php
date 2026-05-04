@@ -25,26 +25,27 @@
               <div class="flex justify-between items-start">
                 <h3 class="text-xl font-black">{{$animal->name}}</h3>
                 <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{{$animal->age}} Years Old</span>
+                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">{{$animal->weight}} Kg</span>
               </div>
-              <p class="text-sm text-gray-400">Speices:{{$animal->species}}</p>
+              <p class="text-sm text-gray-400">Speices: {{$animal->species}}</p>
+              <p class="text-sm text-gray-400">Gender:  {{$animal->gender}}</p>
             </div>
             <div class="flex flex-col gap-2">
-              <div class="flex items-center gap-2 text-xs text-gray-500">
-                <span class="material-symbols-outlined text-sm text-purple-500">schedule</span>
-                <span>Last visit: 2 weeks ago</span>
-              </div>
-              <div class="flex items-center gap-2 text-xs text-gray-500">
-                <span class="material-symbols-outlined text-sm text-purple-500">medical_information</span>
-                <span>Vaccinations up to date</span>
-              </div>
+              <div class="flex items-center gap-2 text-xs text-gray-500"></div>
             </div>
             <div class="flex gap-4">
-              <button class="px-3 py-2 w-full rounded-lg bg-blue-50 text-purple-500 text-xs font-bold">Health Records</button>
-              <a href="{{route('pets.addAppointment', $animal->id)}}" class="px-3 py-2 w-full rounded-lg bg-blue-50 text-purple-500 text-xs font-bold">Book Appointment</a>
+              <a href="{{route('pets.addAppointment', $animal->id)}}" class="px-3 py-2 w-full rounded-lg bg-blue-50 text-purple-500 text-xs font-bold flex items-center justify-center">Book Appointment</a>
             </div>
             <div class="flex gap-6">
-                 <a href="{{route('pets.edit', $animal->id)}}" class="flex-1 py-2.5 rounded-lg border border-gray-200 text-white bg-yellow-300 text-xs text-center font-bold">Edit Profile</a>
-                  <a href="#" class="flex-1 py-2.5 rounded-lg border border-gray-200 text-white bg-red-500 text-xs text-center font-bold">Delete</a>
+                 <a href="{{route('pets.edit', $animal->id)}}" 
+                   class="flex-1 py-2 rounded-lg border border-gray-200 text-white bg-yellow-300 text-xs text-center font-bold flex items-center justify-center">Edit Profile</a>
+                 <form  class="flex-1" action="{{ route('pets.delete', $animal->id) }}" method="POST">
+                    @csrf
+                    @method('Delete')
+                    <button  type="submit" class="flex-1  w-full py-2.5 rounded-lg border border-gray-200 text-white bg-red-500 text-xs text-center font-bold">
+                      Delete
+                    </button>
+                 </form>
             </div>
           </div>
         </div>

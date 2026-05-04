@@ -38,8 +38,14 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center gap-2">
-                                    <!-- <div class="w-2 h-2 rounded-full bg-green-500"></div> -->
-                                    <span class="text-sm text-gray-600">{{$appointment->statut}}</span>
+                                    <span class="text-sm 
+                                    @if($appointment->statut == 'confirmed')
+                                    text-green-600
+                                    @else
+                                      text-red-600
+                                    @endif
+                                    
+                                    ">{{$appointment->statut}}</span>
                                 </div>
                             </td>
                         </tr>
@@ -89,26 +95,5 @@
         </div>
 
     </div>
-
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="bg-white px-4 py-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl7Nquj6n9o4ytrBWhaM7kS-NDYXg-ogG-kVVIOgUNq5x67nwWRMK62X__F3HV6Rn4Y2-zLrp1Xo7Xmo4FyW8QpGOslfpkyda29IMErgOWy9AUZ7hdG0vk_aFL5Lne10NtyuVtlnYRb8CZsaQ_87xcWaib56nHeIRJ-DqNMOKbmccb2I9Na5SKAAeqDes_JxfHz9f9KVBI6TdT-i6vb8Lum32DCeBk-_PrCY_9Rqi7Uu35-dkecFbgACmiqGTmfkP5Zb7ddIOIxME_" alt="Cooper"
-                class="w-16 h-16 rounded-full object-cover" />
-
-            <div class="flex-1">
-                <p class="text-sm font-bold">Cooper</p>
-                <p class="text-xs text-gray-400">Golden Retriever • 4y</p>
-                <div class="flex items-center gap-1 mt-1">
-                    <span class="material-symbols-outlined text-sm text-gray-400">history</span>
-                    <p class="text-xs text-gray-400">Last visit: 2 days ago</p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-
-
 
 </x-layouts.app>
